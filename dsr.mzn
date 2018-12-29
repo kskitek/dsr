@@ -1,27 +1,27 @@
 %% TODO take into account maxReductionTime specified per object
 %% TODO think about partial reduction in ORED
 
-par set of int: ReductionObjects = 1..20;  % lets say we have that many OREDs
-par float: unitReductionPotential = 0.2; % [MW] per ReductionObject
-array[ReductionObjects] of par float: ReductionPotential = [unitReductionPotential | obj in ReductionObjects];
+par set of int: ReductionObjects;
+par float: unitReductionPotential;  % [MW] per ReductionObject
+array[ReductionObjects] of par float: ReductionPotential;
 
 % volume parameters
-par float: reduction = 2; % [MW]
-par set of int: reductionHours = {2};
+par float: reduction; % [MW]
+par set of int: reductionHours;
+
+% cost parameters
+par int: unitReductionCost; % [zł/MW]
+par int: reductionPrice; % [zł/MW]
+par float: minProfit; % [%]
 
 %% Reduction volume bounds
-par float: minReductionByPSE = 0.9; % [%]
+par float: minReductionByPSE; % [%]
 %% reduction bounded "only" by cost - use when maximizing profit
 par float: lowerReductionBoundary = reduction * minReductionByPSE; % [MW]
 par float: upperReductionBoundary = reduction * 10; % [MW]
 
-% cost parameters
-par int: unitReductionCost = 100; % [zł/MW]
-par int: reductionPrice = 13000; % [zł/MW]
-par float: minProfit = 0.25; % [%]
-
-set of int: HOUR = 0..23;
-array[ReductionObjects,reductionHours] of var 0..1: reductionPlan; % binary decision - reduction on/off
+% binary decision - reduction on/off
+array[ReductionObjects,reductionHours] of var 0..1: reductionPlan;
 
 % volume constraints
 var lowerReductionBoundary..upperReductionBoundary: reductionPlanVolume =
@@ -37,7 +37,6 @@ var float: reductionProfit = reductionPrice - reductionCost;
 
 constraint reductionProfit >= reductionPrice * minProfit;
 
-%% when changing maximization variable change also volume bounds
 solve maximize reductionProfit;
 
 output ["Requested reduction volume=\(reduction)MW\n",

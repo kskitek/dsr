@@ -1,0 +1,13 @@
+
+ReductionObjects = 1..20;
+unitReductionPotential = 0.2;
+ReductionPotential = [unitReductionPotential | obj in ReductionObjects];
+
+reduction = 2; % [MW]
+reductionHours = {2};
+
+minReductionByPSE = 0.9; % [%]
+
+unitReductionCost = 100; % [zł/MW]
+reductionPrice = 13000; % [zł/MW]
+minProfit = 0.25; % [%]
