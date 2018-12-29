@@ -1,3 +1,3 @@
 %:
-	mzn2fzn $@.mzn && fzn-gecode -s true $@.fzn
-
+	minizinc --statistics --no-output-ozn --output-objective --output-time \
+	  --time-limit 60000 --solver Gecode $@.mzn
