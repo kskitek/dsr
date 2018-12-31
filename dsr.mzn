@@ -16,7 +16,6 @@ par float: minProfit; % [%]
 
 %% Reduction volume bounds
 par float: minReductionByPSE; % [%]
-%% reduction bounded "only" by cost - use when maximizing profit
 par float: lowerReductionBoundary = reduction * minReductionByPSE; % [MW]
 par float: upperReductionBoundary = reduction * 10; % [MW]
 
@@ -24,12 +23,9 @@ par float: upperReductionBoundary = reduction * 10; % [MW]
 array[ReductionObjects,reductionHours] of var 0..1: reductionPlan;
 
 % volume constraints
-var lowerReductionBoundary..upperReductionBoundary: reductionPlanVolume =
-    sum(h in reductionHours, obj in ReductionObjects)
+var lowerReductionBoundary..upperReductionBoundary: reductionPlanVolume;
+constraint reductionPlanVolume = sum(h in reductionHours, obj in ReductionObjects)
         (reductionPlan[obj, h] * ReductionPotential[obj]);
-
-constraint reductionPlanVolume >= lowerReductionBoundary;
-constraint reductionPlanVolume <= upperReductionBoundary;
 
 % costs constraints
 var float: reductionCost = reductionPlanVolume * unitReductionCost;
@@ -47,7 +43,11 @@ output ["Requested reduction volume=\(reduction)MW\n",
 
 output [ "Hours:    "];
 output [ formatNumber(h) ++ " " | h in reductionHours];
-output [ if h = reductionHours[1] then "\nObj[\(formatNumber(obj))]: " else "  " endif ++ "\(reductionPlan[obj, h])" | obj in ReductionObjects, h in reductionHours];
+output [ if h = reductionHours[1]
+           then "\nObj[\(formatNumber(obj))]: "
+           else "  "
+         endif ++ "\(reductionPlan[obj, h])"
+         | obj in ReductionObjects, h in reductionHours];
 
 function string: formatNumber(int: number) =
   if number < 10
