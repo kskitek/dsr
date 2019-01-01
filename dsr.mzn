@@ -34,17 +34,18 @@ constraint forall (obj in ReductionObjects)
 % costs constraints
 var float: reductionCost = sum(h in reductionHours, obj in ReductionObjects)
                           (ReductionCost[obj] * reductionPlan[obj,h] * ReductionPotential[obj]);
-var float: reductionProfit = reductionPrice - reductionCost;
+var float: reductionProfit = reductionPrice * reduction - reductionCost;
 
 constraint reductionProfit >= reductionPrice * minProfit;
 
-solve maximize reductionProfit;
+solve maxmize reductionProfit;
+% solve satisfy;
 
-output ["Requested reduction volume=\(reduction)MW\n",
-        "Requested reduction hours=\(reductionHours)\n",
-        "Planned reduction volume=\(reductionPlanVolume)MW\n",
-        "Planned reduction profit=\(reductionProfit)zł\n",
-        "Planned reduction cost=\(reductionCost)zł\n"];
+output ["Requested reduction volume =\(reduction)MW\n",
+        "Requested reduction hours  =\(reductionHours)\n",
+        "Planned reduction volume   =\(reductionPlanVolume)MW\n",
+        "Planned reduction profit   =\(reductionProfit)zł\n",
+        "Planned reduction cost     =\(reductionCost)zł\n"];
 
 output [ "Hours:    "];
 output [ formatNumber(h) ++ " " | h in reductionHours];

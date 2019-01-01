@@ -1,0 +1,13 @@
+
+ReductionObjects = 1..100;
+ReductionPotential = [0.2 | obj in ReductionObjects]; % [MW]
+MaxReductionDuration = [ 3 | obj in ReductionObjects];
+ReductionCost = [100 | obj in ReductionObjects]; % [zł/MW]
+
+reduction = 50; % [MW]
+reductionHours = 2..4;
+
+minReductionByPSE = 1.0; % [%]
+
+reductionPrice = 13000; % [zł/MW]
+minProfit = 0.25; % [%]
