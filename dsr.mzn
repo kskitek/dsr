@@ -1,9 +1,10 @@
-%% TODO take into account maxReductionTime specified per object
+%% TODO give maxReductionDuration in hours (e.g. night hours have 4h max while day hours have 1h)
 %% TODO think about partial reduction in ORED
+%% TODO unitReductionCost should be replaced with array of cost per ReductionObjet
 
 par set of int: ReductionObjects;
-par float: unitReductionPotential;  % [MW] per ReductionObject
-array[ReductionObjects] of par float: ReductionPotential;
+array[ReductionObjects] of par float: ReductionPotential; % [MW]
+array[ReductionObjects] of par int: MaxReductionDuration; % [h]
 
 % volume parameters
 par float: reduction; % [MW]
@@ -26,6 +27,10 @@ array[ReductionObjects,reductionHours] of var 0..1: reductionPlan;
 var lowerReductionBoundary..upperReductionBoundary: reductionPlanVolume;
 constraint reductionPlanVolume = sum(h in reductionHours, obj in ReductionObjects)
         (reductionPlan[obj, h] * ReductionPotential[obj]);
+
+% reduction hours constraints
+constraint forall (obj in ReductionObjects)
+        (sum(h in reductionHours) (reductionPlan[obj,h]) <= MaxReductionDuration[obj]);
 
 % costs constraints
 var float: reductionCost = reductionPlanVolume * unitReductionCost;

@@ -1,12 +1,14 @@
 
-ReductionObjects = 1..20;
-unitReductionPotential = 0.2;
-ReductionPotential = [unitReductionPotential | obj in ReductionObjects];
+ReductionObjects = 1..10;
+ReductionPotential = [0.2 | obj in ReductionObjects];
+% MaxReductionDuration = [2 | obj in ReductionObjects];
+MaxReductionDuration = [1, 3, 1, 2, 1, 0, 3, 2, 3, 3];
 
-reduction = 2; % [MW]
-reductionHours = {2};
+reduction = 3.8; % [MW]
+% reductionHours = {2,3};
+reductionHours = 2..4;
 
-minReductionByPSE = 0.9; % [%]
+minReductionByPSE = 1.0; % [%]
 
 unitReductionCost = 100; % [zł/MW]
 reductionPrice = 13000; % [zł/MW]
